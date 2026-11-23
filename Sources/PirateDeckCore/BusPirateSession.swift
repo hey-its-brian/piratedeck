@@ -146,11 +146,25 @@ public actor BusPirateSession {
 
     private func cleaned(_ raw: String, command: String?, dropPrompt: Bool) -> String {
         let trimSet = CharacterSet.whitespacesAndNewlines
-        var text = stripANSI(raw).trimmingCharacters(in: trimSet)
-        if let command, !command.isEmpty,
-           text == command || text.hasPrefix(command + "\r\n") || text.hasPrefix(command + "\r") || text.hasPrefix(command + "\n") {
-            text = String(text.dropFirst(command.count)).trimmingCharacters(in: trimSet)
+        var text = stripANSI(raw)
+        if let command, !command.isEmpty {
+            // The firmware prints the line again, sometimes with a completion hint:
+            //   "\rHiZ> iflash\r\rHiZ> i\r\n". The reply starts after the last
+            //   "<prompt> <command>" line.
+            let pattern = "(?:^|[\\r\\n])[A-Za-z0-9-]+> ?" + NSRegularExpression.escapedPattern(for: command) + "[ \\t]*(?=[\\r\\n]|$)"
+            if let regex = try? NSRegularExpression(pattern: pattern),
+               let match = regex.matches(in: text, range: NSRange(text.startIndex..., in: text)).last,
+               let range = Range(match.range, in: text) {
+                text = String(text[range.upperBound...])
+            } else {
+                let trimmed = text.trimmingCharacters(in: trimSet)
+                if trimmed == command || trimmed.hasPrefix(command + "\r\n")
+                    || trimmed.hasPrefix(command + "\r") || trimmed.hasPrefix(command + "\n") {
+                    text = String(trimmed.dropFirst(command.count))
+                }
+            }
         }
+        text = text.trimmingCharacters(in: trimSet)
         if dropPrompt, let mode = modePrompt(in: text), text.hasSuffix(mode + ">") {
             text = String(text.dropLast(mode.count + 1)).trimmingCharacters(in: trimSet)
         }

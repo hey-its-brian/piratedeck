@@ -21,4 +21,12 @@ final class TextCleaningTests: XCTestCase {
         XCTAssertTrue(isVT100Question("VT100 compatible color mode? (Y/n)> "))
         XCTAssertFalse(isVT100Question("HiZ> "))
     }
+    // Real firmware e9cb31e output: the prompt is followed by ETX (0x03), errors by BEL (0x07).
+    func testStripsControlCharactersButKeepsLineEnds() {
+        XCTAssertEqual(stripANSI("\u{07}HiZ> \u{03}"), "HiZ> ")
+        XCTAssertEqual(stripANSI("a\r\n\tb"), "a\r\n\tb")
+    }
+    func testModePromptFoundWithTrailingETX() {
+        XCTAssertEqual(modePrompt(in: "\rHiZ> \r\n\r\nHiZ> \u{03}"), "HiZ")
+    }
 }

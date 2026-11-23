@@ -85,4 +85,19 @@ final class SessionTests: XCTestCase {
         do { _ = try await s.sendInteractive("zzz", timeout: .milliseconds(300)); XCTFail("no error") }
         catch { XCTAssertEqual(error as? SessionError, .timeout(partial: "")) }
     }
+    // Real firmware e9cb31e echo: the line is printed again with a completion hint.
+    func testRealFirmwareEchoWithHintIsRemoved() async throws {
+        let (s, f, _) = makeSession()
+        f.autoReplies = [
+            "\r": "\rHiZ> \r\n\r\nHiZ> \u{03}",
+            "i\r": "\rHiZ> iflash\r\rHiZ> i\r\n\r\nBus Pirate 5 REV10\r\nActive mode: HiZ\r\n\r\nHiZ> \u{03}",
+            "x\r": "\rHiZ> xflash\r\rHiZ> x\r\n\r\nInvalid command: x. Type ? for help.\r\n\u{07}HiZ> \u{03}",
+        ]
+        try await s.start()
+        XCTAssertFalse(f.written.contains("x\r"), "start must not send x at a mode prompt")
+        let reply = try await s.send("i")
+        XCTAssertEqual(reply, "Bus Pirate 5 REV10\r\nActive mode: HiZ")
+        let bad = try await s.send("x")
+        XCTAssertEqual(bad, "Invalid command: x. Type ? for help.")
+    }
 }

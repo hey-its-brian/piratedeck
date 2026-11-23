@@ -12,7 +12,13 @@ private let modePromptPattern: NSRegularExpression = {
 /// Removes ANSI / VT100 escape codes from device output.
 public func stripANSI(_ text: String) -> String {
     let range = NSRange(text.startIndex..., in: text)
-    return ansiPattern.stringByReplacingMatches(in: text, range: range, withTemplate: "")
+    let noCodes = ansiPattern.stringByReplacingMatches(in: text, range: range, withTemplate: "")
+    // The firmware sends ETX (0x03) after each prompt and BEL (0x07) on errors.
+    // Remove all control characters except tab, line feed and carriage return.
+    let kept = noCodes.unicodeScalars.filter { scalar in
+        scalar == "\t" || scalar == "\n" || scalar == "\r" || !(scalar.value < 0x20 || scalar.value == 0x7F)
+    }
+    return String(String.UnicodeScalarView(kept))
 }
 
 private func lastNonEmptyLine(_ text: String) -> String? {
