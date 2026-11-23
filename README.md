@@ -4,6 +4,18 @@ A Mac app that controls a Bus Pirate 5 without the console. Version 0.2: connect
 
 Tested with: Bus Pirate 5 REV10, firmware main branch commit `e9cb31e` (Nov 20 2026).
 
+PirateDeck is a personal project. It is not affiliated with Bus Pirate or Dangerous Prototypes.
+
+## Status
+
+Early version. It works on one device and one firmware build. A firmware update can change the reply text and break a parser. If that occurs, the app shows the raw reply and the console still works.
+
+## Requirements
+
+- macOS 14 or later
+- Xcode command line tools with Swift 5.9 or later (no Xcode project is necessary)
+- A Bus Pirate 5 with current firmware
+
 ## Build and run
 
 ```bash
