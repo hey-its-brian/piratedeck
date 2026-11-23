@@ -69,4 +69,20 @@ final class SessionTests: XCTestCase {
         try await s2.start(); _ = try await s2.send("m i2c"); await s2.shutdown()
         XCTAssertTrue(f2.written.contains("m hiz\r"))
     }
+    func testSendInteractiveReturnsAtMenuPromptWithoutTimeout() async throws {
+        let (s, f, _) = makeSession()
+        f.autoReplies = ["\r": "HiZ> ", "m\r": "m\r\nMode selection\r\n x. Exit\r\nMode > "]
+        try await s.start()
+        let reply = try await s.sendInteractive("m", timeout: .seconds(2))
+        XCTAssertEqual(reply, "Mode selection\r\n x. Exit\r\nMode >")
+        let mode = await s.currentMode
+        XCTAssertEqual(mode, "HiZ")
+    }
+    func testSendInteractiveTimesOutWhenDeviceIsSilent() async throws {
+        let (s, f, _) = makeSession()
+        f.autoReplies = ["\r": "HiZ> "]
+        try await s.start()
+        do { _ = try await s.sendInteractive("zzz", timeout: .milliseconds(300)); XCTFail("no error") }
+        catch { XCTAssertEqual(error as? SessionError, .timeout(partial: "")) }
+    }
 }

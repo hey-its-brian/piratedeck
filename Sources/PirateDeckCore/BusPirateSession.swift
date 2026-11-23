@@ -68,6 +68,21 @@ public actor BusPirateSession {
         }
     }
 
+    /// For lines typed by a person in the console. Returns at a mode prompt, or
+    /// when the output stops for 300 ms (for example at a menu prompt).
+    public func sendInteractive(_ line: String, timeout: Duration = .seconds(5)) async throws -> String {
+        startReaderIfNeeded()
+        try write(line + "\r", logAs: line.isEmpty ? "<Enter>" : line)
+        try await waitForQuiet(.milliseconds(300), deadline: ContinuousClock.now + timeout)
+        if let mode = modePrompt(in: buffer) {
+            currentMode = mode
+            return cleaned(buffer, command: line, dropPrompt: true)
+        }
+        let text = cleaned(buffer, command: line, dropPrompt: false)
+        if text.isEmpty { throw SessionError.timeout(partial: "") }
+        return text
+    }
+
     /// Sets HiZ mode if a different mode is active, then closes the port.
     public func shutdown() async {
         if let mode = currentMode, mode.lowercased() != "hiz", !ended {
