@@ -29,4 +29,10 @@ final class TextCleaningTests: XCTestCase {
     func testModePromptFoundWithTrailingETX() {
         XCTAssertEqual(modePrompt(in: "\rHiZ> \r\n\r\nHiZ> \u{03}"), "HiZ")
     }
+    func testCollapseKeepsTextAfterLastLoneCR() {
+        XCTAssertEqual(collapseCarriageReturns("\rHiZ> m HiZ\r\rHiZ> m i2c\r\n\r\nMode: I2C\r\n"), "HiZ> m i2c\n\nMode: I2C\n")
+    }
+    func testCollapseHandlesEchoLineThatEndsWithCR() {
+        XCTAssertEqual(collapseCarriageReturns("\rI2C> v [pin]\r\rI2C> v\r\r\n1.Vout\r\n"), "I2C> v\n1.Vout\n")
+    }
 }

@@ -43,3 +43,20 @@ public func isVT100Question(_ text: String) -> Bool {
     guard let line = lastNonEmptyLine(text) else { return false }
     return line.range(of: "VT100", options: .caseInsensitive) != nil
 }
+
+/// Makes device text readable. The firmware uses a lone carriage return to go
+/// back to the line start and print the line again (echo with hints). In each
+/// line, only the text after the last lone carriage return stays. Line ends
+/// become "\n".
+public func collapseCarriageReturns(_ text: String) -> String {
+    let unified = text.replacingOccurrences(of: "\r\n", with: "\n")
+    let lines = unified.components(separatedBy: "\n").map { line -> String in
+        var scalars = Array(line.unicodeScalars)
+        while scalars.last == "\r" { scalars.removeLast() }
+        if let index = scalars.lastIndex(of: "\r") {
+            scalars = Array(scalars[(index + 1)...])
+        }
+        return String(String.UnicodeScalarView(scalars))
+    }
+    return lines.joined(separator: "\n")
+}

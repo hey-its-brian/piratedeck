@@ -96,6 +96,9 @@ public actor BusPirateSession {
 
     public var isDisconnected: Bool { ended }
 
+    /// True if the last exchange ended at a mode prompt (not inside a menu).
+    public var isAtModePrompt: Bool { modePrompt(in: buffer) != nil }
+
     // MARK: - Internals
 
     private func startReaderIfNeeded() {

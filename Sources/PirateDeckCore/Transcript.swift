@@ -29,7 +29,13 @@ public final class Transcript: @unchecked Sendable {
         callback?()
     }
 
+    /// Readable text: no escape codes, echo redraws removed.
     public func plainText() -> String {
+        collapseCarriageReturns(rawText())
+    }
+
+    /// Text without escape codes but with carriage returns kept (for test fixtures).
+    public func rawText() -> String {
         lock.lock(); defer { lock.unlock() }
         return stripANSI(text)
     }

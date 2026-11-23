@@ -8,6 +8,9 @@ final class FakeTransport: ByteTransport, @unchecked Sendable {
     private var continuation: AsyncStream<Data>.Continuation!
     let incoming: AsyncStream<Data>
     var autoReplies: [String: String] = [:]
+    /// Replies used one at a time, before `autoReplies`.
+    var sequences: [String: [String]] = [:]
+    var onWrite: ((String) -> Void)?
 
     init() {
         var c: AsyncStream<Data>.Continuation!
@@ -25,9 +28,15 @@ final class FakeTransport: ByteTransport, @unchecked Sendable {
         lock.lock()
         if _closed { lock.unlock(); throw TransportError.closed }
         _written.append(text)
-        let reply = autoReplies[text]
+        var reply = autoReplies[text]
+        if var queue = sequences[text], !queue.isEmpty {
+            reply = queue.removeFirst()
+            sequences[text] = queue
+        }
+        let hook = onWrite
         lock.unlock()
         if let reply { feed(reply) }
+        hook?(text)
     }
 
     func feed(_ text: String) {
