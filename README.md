@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/icon-256.png" width="128" alt="PirateDeck icon: a sailing ship with a circuit board hull"></p>
+
 # PirateDeck
 
 A Mac app that controls a Bus Pirate 5 without the console. Version 0.2: connection, setup, wiring panel, read-only actions, and a console panel.
@@ -56,3 +58,9 @@ PIRATEDECK_HW_APPLY=1 swift test --filter testApplyI2CScanAndReturnToHiZOnRealDe
 - `Sources/PirateDeckCore`: serial port, session, parsers. All logic and all tests.
 - `Sources/PirateDeck`: the SwiftUI window.
 - `docs/plans`: the build plans.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
+
+The app icon was made with the Z-Image Turbo model on Hugging Face.
