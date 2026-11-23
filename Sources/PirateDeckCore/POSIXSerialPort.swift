@@ -74,7 +74,9 @@ public final class POSIXSerialPort: ByteTransport, @unchecked Sendable {
         closed = true
         lock.unlock()
         guard !wasClosed else { return }
-        Darwin.close(fd)
+        // The reader thread closes the file descriptor when its loop ends.
+        // This prevents a read or select on a descriptor number that the
+        // system gave to a different file.
         continuation.finish()
     }
 
@@ -111,5 +113,6 @@ public final class POSIXSerialPort: ByteTransport, @unchecked Sendable {
             }
         }
         close()
+        Darwin.close(fd)
     }
 }
