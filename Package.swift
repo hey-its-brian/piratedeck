@@ -7,6 +7,6 @@ let package = Package(
     targets: [
         .target(name: "PirateDeckCore"),
         .executableTarget(name: "PirateDeck", dependencies: ["PirateDeckCore"]),
-        .testTarget(name: "PirateDeckCoreTests", dependencies: ["PirateDeckCore"]),
+        .testTarget(name: "PirateDeckCoreTests", dependencies: ["PirateDeckCore"], exclude: ["Captures"]),
     ]
 )

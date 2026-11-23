@@ -1,0 +1,178 @@
+>> <Enter>
+HiZ> 
+
+HiZ> 
+>> m i2c
+HiZ> m HiZHiZ> m  HiZHiZ> m i2CHiZ> m i2CHiZ> m i2cHiZ> m i2c
+
+
+Mode: I2C
+
+Use previous settings?
+ I2C speed: 400 kHz
+ Clock stretching: OFF 
+
+y/n, x to exit (Y) > 
+>> <Enter>
+
+
+
+I2C> 
+>> W 3.3
+I2C> W [volts]I2C> W  [volts]I2C> W 3I2C> W 3.I2C> W 3.3I2C> W 3.3
+
+3.30V requested, closest value: 3.30V
+300.0mA requested, closest value: 300.0mA
+Undervoltage limit: 2.96V (10%)
+
+Power supply:  Enabled
+Vreg output: 3.3V, Vref/Vout pin: 3.3V, Current: 4.0mA
+
+I2C> 
+>> v
+I2C> v [pin]I2C> v
+
+1.Vout	2.IO0	3.IO1	4.IO2	5.IO3	6.IO4	7.IO5	8.IO6	9.IO7	10.GND	
+003.9mA	SDA	SCL	-	-	-	-	-	-	GND	
+3.3V	0.0V	0.0V	0.0V	0.0V	0.0V	0.0V	0.0V	0.0V	GND
+
+I2C> 
+>> P
+I2C> PI2C> P
+
+Pull-up resistors: Enabled (10K ohms @ 3.3V)
+
+I2C> 
+>> v
+I2C> v [pin]I2C> v
+
+1.Vout	2.IO0	3.IO1	4.IO2	5.IO3	6.IO4	7.IO5	8.IO6	9.IO7	10.GND	
+003.4mA	SDA	SCL	-	-	-	-	-	-	GND	
+3.3V	3.3V	3.3V	3.3V	3.3V	3.3V	3.3V	3.3V	3.3V	GND
+
+I2C> 
+>> scan
+I2C> scriptI2C> scriptI2C> scanI2C> scanI2C> scan
+
+I2C address search:
+
+Found 0 addresses, 0 W/R pairs.
+
+I2C> 
+>> i
+I2C> iI2C> i
+
+This device complies with part 15 of the FCC Rules. Operation is subject to the following two conditions:
+(1) this device may not cause harmful interference, and 
+(2) this device must accept any interference received, including interference that may cause undesired operation.
+
+Bus Pirate 5 REV10
+https://BusPirate.com/
+Firmware main branch @ e9cb31e (Nov 20 2026 08:39:34)
+RP2040 with 264KB RAM, 128Mbit FLASH
+S/N: 0000000000000000
+Storage: 0.10GB Micron (FAT16 File System)
+
+Configuration file: Not Detected
+Active binmode: SUMP logic analyzer
+Available modes: HiZ 1WIRE UART HDUART I2C SPI 2WIRE 3WIRE DIO LED INFRARED JTAG PS2 USB
+Active mode: I2C
+ I2C speed: 400 kHz
+ Clock stretching: OFF 
+
+Display format: Auto
+Data format: 8 bits, MSB bitorder
+Pull-up resistors: ON
+Power supply: ON (3.3V/3.29V)
+Current limit: OK (3.1mA/300.0mA)
+Frequency generators: OFF
+
+1.Vout	2.IO0	3.IO1	4.IO2	5.IO3	6.IO4	7.IO5	8.IO6	9.IO7	10.GND	
+003.1mA	SDA	SCL	-	-	-	-	-	-	GND	
+3.3V	3.3V	3.3V	3.3V	3.3V	3.3V	3.3V	3.3V	3.3V	GND
+
+I2C> 
+>> w
+I2C> wI2C> w
+
+Power supply: Disabled
+
+I2C> 
+>> p
+I2C> pI2C> p
+
+Pull-up resistors: Disabled
+I2C> 
+>> m uart
+I2C> m HiZI2C> m  HiZI2C> m uARTI2C> m uaRTI2C> m uarTI2C> m uartI2C> m uart
+
+
+Mode: UART
+
+Use previous settings?
+ UART speed: 115200 baud
+ Data bits: 8 
+ Parity: None 
+ Stop bits: 1 
+ Hardware flow control: None 
+ Signal inversion: Non-inverted (Standard) 
+
+y/n, x to exit (Y) > 
+>> <Enter>
+
+
+
+UART> 
+>> i
+UART> iUART> i
+
+This device complies with part 15 of the FCC Rules. Operation is subject to the following two conditions:
+(1) this device may not cause harmful interference, and 
+(2) this device must accept any interference received, including interference that may cause undesired operation.
+
+Bus Pirate 5 REV10
+https://BusPirate.com/
+Firmware main branch @ e9cb31e (Nov 20 2026 08:39:34)
+RP2040 with 264KB RAM, 128Mbit FLASH
+S/N: 0000000000000000
+Storage: 0.10GB Micron (FAT16 File System)
+
+Configuration file: Not Detected
+Active binmode: SUMP logic analyzer
+Available modes: HiZ 1WIRE UART HDUART I2C SPI 2WIRE 3WIRE DIO LED INFRARED JTAG PS2 USB
+Active mode: UART
+ UART speed: 115200 baud
+ Data bits: 8 
+ Parity: None 
+ Stop bits: 1 
+ Hardware flow control: None 
+ Signal inversion: Non-inverted (Standard) 
+
+Display format: Auto
+Data format: 8 bits, MSB bitorder
+Pull-up resistors: OFF
+Power supply: OFF
+Frequency generators: OFF
+
+1.Vout	2.IO0	3.IO1	4.IO2	5.IO3	6.IO4	7.IO5	8.IO6	9.IO7	10.GND	
+OFF	-	-	-	-	TX->	RX<-	-	-	GND	
+0.0V	0.0V	0.0V	0.0V	0.0V	0.0V	0.0V	0.0V	0.0V	GND
+
+UART> 
+>> w
+UART> wUART> w
+
+Power supply: Disabled
+
+UART> 
+>> p
+UART> pUART> p
+
+Pull-up resistors: Disabled
+UART> 
+>> m hiz
+UART> m HiZUART> m  HiZUART> m hiZUART> m hiZUART> m hizUART> m hiz
+
+
+Mode: HiZ
+HiZ> 
