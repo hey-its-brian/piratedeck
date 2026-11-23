@@ -64,7 +64,9 @@ public struct ModeSettings: Equatable, Sendable {
                     "Chip select": spiCSActiveLow ? "2" : "1"]
         case .uart:
             return ["UART speed": String(uartBaud), "Data bits": String(uartDataBits),
-                    "Parity": String(uartParity.rawValue), "Stop bits": String(uartStopBits)]
+                    "Parity": String(uartParity.rawValue), "Stop bits": String(uartStopBits),
+                    // Fixed in this version: no flow control, signal not inverted.
+                    "Hardware flow control": "1", "Signal inversion": "1"]
         }
     }
 }

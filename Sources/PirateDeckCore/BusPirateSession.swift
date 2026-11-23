@@ -73,14 +73,24 @@ public actor BusPirateSession {
     public func sendInteractive(_ line: String, timeout: Duration = .seconds(5)) async throws -> String {
         startReaderIfNeeded()
         try write(line + "\r", logAs: line.isEmpty ? "<Enter>" : line)
-        try await waitForQuiet(.milliseconds(300), deadline: ContinuousClock.now + timeout)
-        if let mode = modePrompt(in: buffer) {
-            currentMode = mode
-            return cleaned(buffer, command: line, dropPrompt: true)
+        let deadline = ContinuousClock.now + timeout
+        while true {
+            try await waitForQuiet(.milliseconds(300), deadline: deadline)
+            if let mode = modePrompt(in: buffer) {
+                currentMode = mode
+                return cleaned(buffer, command: line, dropPrompt: true)
+            }
+            let text = cleaned(buffer, command: line, dropPrompt: false)
+            if !text.isEmpty { return text }
+            // Only the echo came back. The device can be slow (a mode change):
+            // wait for more bytes until the deadline.
+            if ContinuousClock.now >= deadline { throw SessionError.timeout(partial: "") }
+            let seen = buffer.count
+            while buffer.count == seen, ContinuousClock.now < deadline {
+                if ended { throw SessionError.disconnected }
+                try? await Task.sleep(for: .milliseconds(10))
+            }
         }
-        let text = cleaned(buffer, command: line, dropPrompt: false)
-        if text.isEmpty { throw SessionError.timeout(partial: "") }
-        return text
     }
 
     /// Sets HiZ mode if a different mode is active, then closes the port.

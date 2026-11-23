@@ -100,4 +100,20 @@ final class SessionTests: XCTestCase {
         let bad = try await s.send("x")
         XCTAssertEqual(bad, "Invalid command: x. Type ? for help.")
     }
+    // Real device: after the last menu answer, the prompt comes more than 300 ms after the echo.
+    func testSendInteractiveWaitsForLatePromptAfterEchoOnly() async throws {
+        let (s, f, _) = makeSession()
+        f.autoReplies = ["\r": "HiZ> ", "1\r": "1\r\n"]
+        f.onWrite = { [weak f] text in
+            guard text == "1\r" else { return }
+            Task { try? await Task.sleep(for: .milliseconds(600)); f?.feed("\r\nI2C> \u{03}") }
+        }
+        try await s.start()
+        let reply = try await s.sendInteractive("1", timeout: .seconds(3))
+        XCTAssertEqual(reply, "")
+        let mode = await s.currentMode
+        XCTAssertEqual(mode, "I2C")
+        let atPrompt = await s.isAtModePrompt
+        XCTAssertTrue(atPrompt)
+    }
 }

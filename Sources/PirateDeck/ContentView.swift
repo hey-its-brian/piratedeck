@@ -11,17 +11,24 @@ struct ContentView: View {
             statusBar
             Divider()
             if let note = model.note {
-                Text(note)
-                    .font(.callout)
-                    .padding(8)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color.yellow.opacity(0.25))
+                banner(note)
+            }
+            ForEach(model.warnings, id: \.self) { warning in
+                banner(warning)
             }
             middle
             Divider()
             console
         }
-        .frame(minWidth: 720, minHeight: 480)
+        .frame(minWidth: 860, minHeight: 640)
+    }
+
+    private func banner(_ text: String) -> some View {
+        Text(text)
+            .font(.callout)
+            .padding(8)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color.yellow.opacity(0.25))
     }
 
     // MARK: - Status bar
@@ -85,10 +92,11 @@ struct ContentView: View {
             case .searching:
                 ProgressView()
             case .connected:
-                Text("Setup and wiring come in the next version.")
-                    .foregroundStyle(.secondary)
-                Text("Open the console below to send commands.")
-                    .foregroundStyle(.secondary)
+                HStack(alignment: .top, spacing: 12) {
+                    SetupView(model: model).frame(width: 360)
+                    WiringView(model: model)
+                }
+                ActionsView(model: model)
             }
         }
         .padding()

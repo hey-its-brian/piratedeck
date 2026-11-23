@@ -16,7 +16,7 @@ final class ModeSettingsTests: XCTestCase {
         XCTAssertEqual(s.menuAnswers(for: .spi), ["SPI speed": "100", "Data bits": "8", "Clock polarity": "1", "Clock phase": "1", "Chip select": "2"])
         s.spiClockIdleHigh = true; s.uartParity = .odd
         XCTAssertEqual(s.menuAnswers(for: .spi)["Clock polarity"], "2")
-        XCTAssertEqual(s.menuAnswers(for: .uart), ["UART speed": "115200", "Data bits": "8", "Parity": "3", "Stop bits": "1"])
+        XCTAssertEqual(s.menuAnswers(for: .uart), ["UART speed": "115200", "Data bits": "8", "Parity": "3", "Stop bits": "1", "Hardware flow control": "1", "Signal inversion": "1"])
         XCTAssertEqual(s.menuAnswers(for: .hiz), [:])
     }
 }

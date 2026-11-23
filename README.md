@@ -1,6 +1,6 @@
 # PirateDeck
 
-A Mac app that controls a Bus Pirate 5 without the console. This is version 0.1: connection, status bar, and a console panel.
+A Mac app that controls a Bus Pirate 5 without the console. Version 0.2: connection, setup, wiring panel, read-only actions, and a console panel.
 
 Tested with: Bus Pirate 5 REV10, firmware main branch commit `e9cb31e` (Nov 20 2026).
 
@@ -17,15 +17,27 @@ Close all other terminal programs on the Bus Pirate port (for example `screen`) 
 ## What it does
 
 - Finds the Bus Pirate terminal port (`/dev/cu.usbmodem*buspirate*`). It does not open other serial devices.
-- Answers the VT100 question with `n` and reads the `i` reply.
-- Shows a console panel. Type a command and press Return. Copy Transcript puts all sent and received text on the clipboard.
+- **Setup:** select HiZ, I2C, SPI or UART, the mode settings, the power source, the voltage and the pull-ups, then click Apply.
+- **Wiring:** shows each used pin, the signal, where to connect it, and its voltage.
+- **Actions:** I2C scan and register read, SPI flash identify and byte transfer, Return to HiZ. The actions are enabled only after Apply and only if the voltage on VOUT is correct.
+- **Console:** shows each command that the app sends. You can also type commands. Copy Transcript puts all text on the clipboard.
 - Sets HiZ mode when you disconnect or quit.
 
-## Transcript for the next version
+## Safety
 
-With nothing connected to the Bus Pirate pins, send these lines one at a time, then click Copy Transcript:
+- The app sends `W` (power on) only when you click Apply with "Bus Pirate supplies power" selected.
+- This version has no write or erase actions.
+- A command that you type in the console disables the actions until you click Apply again, because the app no longer knows the setup.
 
-`i`, `v`, `m`, `x`, `m i2c` (press Return for each default), `i`, `v`, `W 3.3`, `v`, `P`, `v`, `scan`, `w`, `p`, `m spi` (defaults), `v`, `m uart` (defaults), `v`, `m hiz`, `W -h`, `m -h`
+## Hardware tests (optional)
+
+These tests talk to a real Bus Pirate. Quit PirateDeck first. Nothing must be connected to the pins.
+
+```bash
+PIRATEDECK_HW=1 swift test --filter testConnectAndReadInfoFromRealDevice
+PIRATEDECK_HW_MODES=1 swift test --filter testSPIAndUARTMenusOnRealDevice
+PIRATEDECK_HW_APPLY=1 swift test --filter testApplyI2CScanAndReturnToHiZOnRealDevice   # 3.3 V on VOUT for a short time
+```
 
 ## Layout
 
